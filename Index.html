@@ -2,74 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignalQ Real-Time Signals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SignalQ - Real Time Trading Signals</title>
   <style>
     body {
+      background-color: #121212;
+      color: #ffffff;
       font-family: Arial, sans-serif;
+      margin: 0;
       padding: 20px;
-      background: #121212;
-      color: white;
     }
     h1 {
-      color: #00ffcc;
+      color: #00ffc8;
+      text-align: center;
     }
     #signals {
-      margin-top: 20px;
+      margin-top: 30px;
     }
     .signal {
-      margin-bottom: 10px;
-      padding: 10px;
-      border: 1px solid #00ffcc;
-      border-radius: 5px;
+      background-color: #1e1e1e;
+      border: 1px solid #00ffc8;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .signal strong {
+      color: #00ffc8;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>Live Signals</h1>
-  <div id="signals">Loading...</div>
 
-  <!-- Firebase SDKs -->
+  <h1>Live Quotex Signals</h1>
+
+  <div id="signals">Loading Signals...</div>
+
+  <!-- Firebase SDK -->
   <script type="module">
-    // Import Firebase libraries
+    // Import Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
-    // Firebase config
+    // Your Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBqm1m4eWGBvM3cVIIM2hq-UUjVHaxKlzo",
       authDomain: "signalq-4d185.firebaseapp.com",
+      databaseURL: "https://signalq-4d185-default-rtdb.asia-southeast1.firebasedatabase.app",
       projectId: "signalq-4d185",
-      storageBucket: "signalq-4d185.firebasestorage.app",
+      storageBucket: "signalq-4d185.appspot.com",
       messagingSenderId: "599143674152",
       appId: "1:599143674152:web:d5e886b25c66ac8af7e01d"
     };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const database = getDatabase(app);
 
-    // Reference to "signals" node in database
-    const signalsRef = ref(db, 'signals');
+    // Reference to Signals
+    const signalsRef = ref(database, 'signals');
+    const signalsDiv = document.getElementById('signals');
 
     // Listen for real-time updates
-    const signalsDiv = document.getElementById("signals");
     onValue(signalsRef, (snapshot) => {
       const data = snapshot.val();
-      signalsDiv.innerHTML = ""; // clear old data
+      signalsDiv.innerHTML = ""; // Clear old signals
 
+      // Loop through all signals
       for (const key in data) {
         const signal = data[key];
         signalsDiv.innerHTML += `
           <div class="signal">
             <strong>Asset:</strong> ${signal.asset}<br>
             <strong>Direction:</strong> ${signal.direction}<br>
-            <strong>Win Rate:</strong> ${signal.winRate}%<br>
-            <strong>Time:</strong> ${signal.time}
+            <strong>Win Rate:</strong> ${signal.winRate ? signal.winRate + "%" : "N/A"}<br>
+            <strong>Time:</strong> ${signal.time}<br>
+            <strong>Indicator 1:</strong> ${signal.indicator1}<br>
+            <strong>Indicator 2:</strong> ${signal.indicator2}<br>
+            <strong>Indicator 3:</strong> ${signal.indicator3}<br>
+            <strong>Indicator 4:</strong> ${signal.indicator4}<br>
+            <strong>Indicator 5:</strong> ${signal.indicator5}<br>
+            <strong>Indicator 6:</strong> ${signal.indicator6}
           </div>
         `;
       }
     });
   </script>
+
+  <footer>SignalQ Realtime Signals | Powered by Firebase</footer>
+  
 </body>
 </html>
